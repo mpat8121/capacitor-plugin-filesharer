@@ -7,4 +7,8 @@ export class FileSharerWeb extends WebPlugin implements FileSharerPlugin {
     console.log('ECHO', options);
     return options;
   }
+
+  async share() {
+    throw this.unavailable('FielSharer API not available in this browser.');
+  }
 }
