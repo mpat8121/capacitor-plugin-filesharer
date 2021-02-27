@@ -15,6 +15,7 @@ npx cap sync
 
 * [`echo(...)`](#echo)
 * [`share(...)`](#share)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -39,15 +40,27 @@ echo(options: { value: string; }) => any
 ### share(...)
 
 ```typescript
-share(opts: {}) => any
+share(opts: FileShareOptions) => any
 ```
 
-| Param      | Type            |
-| ---------- | --------------- |
-| **`opts`** | <code>{}</code> |
+| Param      | Type                                                          |
+| ---------- | ------------------------------------------------------------- |
+| **`opts`** | <code><a href="#fileshareoptions">FileShareOptions</a></code> |
 
 **Returns:** <code>any</code>
 
 --------------------
+
+
+### Interfaces
+
+
+#### FileShareOptions
+
+| Prop              | Type                |
+| ----------------- | ------------------- |
+| **`filename`**    | <code>string</code> |
+| **`base64Data`**  | <code>string</code> |
+| **`contentType`** | <code>string</code> |
 
 </docgen-api>

@@ -12,9 +12,6 @@ import java.io.IOException;
 
 public class FileSharer {
     private static final String TAG = "--- IA FILESHARE PLUGIN";
-    public String echo(String value) {
-        return value;
-    }
 
     public boolean writeFile(File cachedFile, String base64Data) {
         try (FileOutputStream fos = new FileOutputStream(cachedFile)) {

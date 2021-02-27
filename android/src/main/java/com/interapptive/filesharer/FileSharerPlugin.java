@@ -25,14 +25,6 @@ public class FileSharerPlugin extends Plugin {
 
     private FileSharer implementation = new FileSharer();
     private static final String FILESHARE_DIR = "capfilesharer";
-    @PluginMethod
-    public void echo(PluginCall call) {
-        String value = call.getString("value");
-
-        JSObject ret = new JSObject();
-        ret.put("value", implementation.echo(value));
-        call.resolve(ret);
-    }
 
     @PluginMethod
     public void share(PluginCall call) {

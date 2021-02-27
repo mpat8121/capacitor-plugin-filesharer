@@ -9,10 +9,4 @@ import Capacitor
 public class FileSharerPlugin: CAPPlugin {
     private let implementation = FileSharer()
 
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
-        call.resolve([
-            "value": implementation.echo(value)
-        ])
-    }
 }

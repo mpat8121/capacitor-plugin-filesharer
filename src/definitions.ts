@@ -1,5 +1,9 @@
 export interface FileSharerPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
+  share(opts: FileShareOptions): Promise<void>;
+}
 
-  share(opts: {}): Promise<any>;
+export interface FileShareOptions {
+  filename: string;
+  base64Data: string;
+  contentType: string;
 }
