@@ -18,9 +18,10 @@ public class FileSharerPlugin: CAPPlugin {
            call.reject("Base64Data parameter not provided")
             return
         }
+            
+        guard let fileData = Data(base64Encoded: base64Data) else {
             return
             call.reject("The base64 data provided is invalid")
-        guard let fileData = Data(base64Encoded: base64Data) else {
         }
 
         let tempFilePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
@@ -46,5 +47,14 @@ public class FileSharerPlugin: CAPPlugin {
             call.reject("Unable to write file correctly")
         } catch {
         }
+    }
+
+    @objc func shareMultiple(_ call: CAPPluginCall) {
+        guard let files = call.get("files") else {
+           call.reject("files parameter not provided")
+            return
+        }
+
+
     }
 }
