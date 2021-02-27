@@ -31,7 +31,27 @@ public class FileSharerPlugin: CAPPlugin {
         }
 
         let tempFilePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        let viewCtrl = UIActivityViewController(activityItems: [tempFilePathUrl], applicationActivities: nil)
+        do{
+            try fileData.write(to: tempFilePathUrl)
 
-        
+            DispatchQueue.main.async {
+                let deviceType = UIDevice.current.model
+                if(deviceType.range(of: "iPad") != nil) {
+                    self.setCenteredPopover(ourCustomViewController)
+                        self.bridge.present(viewCtrl, animated: true, completion: {
+                            call.resolve()
+                        })
+                } else if(deviceType.range(of: "iPhone")) {
+                    self.bridge.present(viewCtrl, animated: true, completion: {
+                            call.resolve()
+                        })
+                } else {
+                    call.reject("Unknow device type to present share")
+                }             
+            }
+        } catch {
+            call.reject("Unable to write file correctly")
+        }
     }
 }
