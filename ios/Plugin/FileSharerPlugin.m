@@ -6,4 +6,5 @@
 CAP_PLUGIN(FileSharerPlugin, "FileSharer",
            CAP_PLUGIN_METHOD(echo, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(share, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(shareMultiple, CAPPluginReturnPromise);
 )

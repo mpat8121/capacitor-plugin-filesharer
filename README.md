@@ -13,29 +13,14 @@ npx cap sync
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
 * [`share(...)`](#share)
+* [`shareMultiple(...)`](#sharemultiple)
 * [Interfaces](#interfaces)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
-
-### echo(...)
-
-```typescript
-echo(options: { value: string; }) => any
-```
-
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
-
-**Returns:** <code>any</code>
-
---------------------
-
 
 ### share(...)
 
@@ -46,6 +31,21 @@ share(opts: FileShareOptions) => any
 | Param      | Type                                                          |
 | ---------- | ------------------------------------------------------------- |
 | **`opts`** | <code><a href="#fileshareoptions">FileShareOptions</a></code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### shareMultiple(...)
+
+```typescript
+shareMultiple(opts: {}) => any
+```
+
+| Param      | Type            |
+| ---------- | --------------- |
+| **`opts`** | <code>{}</code> |
 
 **Returns:** <code>any</code>
 
