@@ -15,4 +15,23 @@ public class FileSharerPlugin: CAPPlugin {
             "value": implementation.echo(value)
         ])
     }
+
+    @objc func share(_ call: CAPPluginCall) {
+        guard let filename = call.getString("filename") else {
+           call.reject("Filename parameter not provided")
+        }
+        guard let base64Data = call.getString("base64Data") else {
+           call.reject("Base64Data parameter not provided")
+        }
+        guard let contentType = call.getString("contentType") else {
+           call.reject("ContentType parameter not provided")
+        }
+        guard let fileData = Data(base64Encoded: base64Data) else {
+            call.reject("The base64 data provided is invalid")
+        }
+
+        let tempFilePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+
+        
+    }
 }
