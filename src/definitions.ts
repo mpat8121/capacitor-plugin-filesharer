@@ -1,5 +1,7 @@
 export interface FileSharerPlugin {
   share(opts: FileShareOptions): Promise<void>;
+
+  shareMultiple(files: {files: FileShareOptions[]}): Promise<void>;
 }
 
 export interface FileShareOptions {
