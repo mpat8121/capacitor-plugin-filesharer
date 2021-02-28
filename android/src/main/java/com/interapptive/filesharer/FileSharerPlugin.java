@@ -1,10 +1,9 @@
 package com.interapptive.filesharer;
 
 import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.StrictMode;
-import android.util.Base64;
 import android.util.Log;
 
 import com.getcapacitor.JSArray;
@@ -90,7 +89,14 @@ public class FileSharerPlugin extends Plugin {
         }
         final Intent shareIntent = implementation.createShareIntent(contentUri, contentType, header);
         Intent chooseIntent = Intent.createChooser(shareIntent, header);
+        try {
         startActivityForResult(call, chooseIntent, "handleFileShare");
+        } catch (Exception exception) {
+            Log.e(getLogTag(), exception.getLocalizedMessage());
+            ret.put("result", false);
+            ret.put("message", exception.getLocalizedMessage());
+            call.resolve(ret);
+        }
     }
 
     @PluginMethod
@@ -132,6 +138,15 @@ public class FileSharerPlugin extends Plugin {
 
     @ActivityCallback
     private void handleFileShare(PluginCall call, ActivityResult result) {
-        call.resolve();
+        JSObject ret = new JSObject();
+        final int grc = result.getResultCode();
+        // ACTION_SEND Returns 0 by default
+        if(grc == Activity.RESULT_CANCELED) {
+            ret.put("result", true);
+        } else {
+            ret.put("result", false);
+        }
+        ret.put("message", "Share Sheet Opened with Code: " + String.valueOf(grc));
+        call.resolve(ret);
     }
 }

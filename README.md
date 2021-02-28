@@ -16,6 +16,7 @@ npx cap sync
 * [`share(...)`](#share)
 * [`shareMultiple(...)`](#sharemultiple)
 * [Interfaces](#interfaces)
+* [Enums](#enums)
 
 </docgen-index>
 
@@ -32,7 +33,13 @@ share(opts: FileShareOptions) => any
 | ---------- | ------------------------------------------------------------- |
 | **`opts`** | <code><a href="#fileshareoptions">FileShareOptions</a></code> |
 
+| Param      | Type                                                          |
+| ---------- | ------------------------------------------------------------- |
+| **`opts`** | <code><a href="#fileshareoptions">FileShareOptions</a></code> |
+
 **Returns:** <code>any</code>
+
+**Since:** 0.0.1
 
 --------------------
 
