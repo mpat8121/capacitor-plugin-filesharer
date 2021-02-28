@@ -13,8 +13,8 @@ npx cap sync
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
 * [`share(...)`](#share)
+* [`shareMultiple(...)`](#sharemultiple)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -22,30 +22,34 @@ npx cap sync
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-### echo(...)
-
-```typescript
-echo(options: { value: string; }) => any
-```
-
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
-
-**Returns:** <code>any</code>
-
---------------------
-
-
 ### share(...)
 
 ```typescript
 share(opts: FileShareOptions) => any
 ```
 
+Open share activity card with an attached base64Data
+
 | Param      | Type                                                          |
 | ---------- | ------------------------------------------------------------- |
 | **`opts`** | <code><a href="#fileshareoptions">FileShareOptions</a></code> |
+
+**Returns:** <code>any</code>
+
+**Since:** 0.0.1
+
+--------------------
+
+
+### shareMultiple(...)
+
+```typescript
+shareMultiple(opts: FileShareMultiOptions) => any
+```
+
+| Param      | Type                                                                    |
+| ---------- | ----------------------------------------------------------------------- |
+| **`opts`** | <code><a href="#filesharemultioptions">FileShareMultiOptions</a></code> |
 
 **Returns:** <code>any</code>
 
@@ -62,5 +66,14 @@ share(opts: FileShareOptions) => any
 | **`filename`**    | <code>string</code> |
 | **`base64Data`**  | <code>string</code> |
 | **`contentType`** | <code>string</code> |
+| **`header`**      | <code>string</code> |
+
+
+#### FileShareMultiOptions
+
+| Prop         | Type                |
+| ------------ | ------------------- |
+| **`header`** | <code>string</code> |
+| **`files`**  | <code>{}</code>     |
 
 </docgen-api>
