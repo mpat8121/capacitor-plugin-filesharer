@@ -34,9 +34,10 @@ public class FileSharer {
         }
     }
 
-    public Intent createShareIntent(Uri contentUri, String contentType) {
+    public Intent createShareIntent(Uri contentUri, String contentType, String title) {
         final Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, title);
         shareIntent.setTypeAndNormalize(contentType);
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         shareIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -47,10 +48,10 @@ public class FileSharer {
 
     public Intent createShareMultipleIntent(ArrayList<Uri> files) {
         Intent shareMultipleIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-        shareMultipleIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
-        shareMultipleIntent.setType("*/*");
         shareMultipleIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         shareMultipleIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        shareMultipleIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+        shareMultipleIntent.setType("*/*");
         shareMultipleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         shareMultipleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return shareMultipleIntent;

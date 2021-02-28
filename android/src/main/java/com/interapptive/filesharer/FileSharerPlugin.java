@@ -48,21 +48,25 @@ public class FileSharerPlugin extends Plugin {
             ret.put("result", false);
             ret.put("message", "Missing argument filename");
             call.resolve(ret);
+            return;
         }
         if(!data.has("contentType")) {
             ret.put("result", false);
             ret.put("message", "Missing argument contentType");
             call.resolve(ret);
+            return;
         }
         if(!data.has("base64Data")) {
             ret.put("result", false);
             ret.put("message", "Missing argument base64Data");
             call.resolve(ret);
+            return;
         }
 
         String filename = data.getString("filename");
         String base64Data = data.getString("base64Data");
         String contentType = data.getString("contentType");
+        String header = data.getString("header");
 
         File cachePath = implementation.getDirectory(FILESHARE_DIR);
         File cachedFile = new File(cachePath, filename);
@@ -84,8 +88,9 @@ public class FileSharerPlugin extends Plugin {
             ret.put("message", "Unable to get file reference: " + ex.getLocalizedMessage());
             call.resolve(ret);
         }
-        final Intent shareIntent = implementation.createShareIntent(contentUri, contentType);
-        startActivityForResult(call, shareIntent, "handleFileShare");
+        final Intent shareIntent = implementation.createShareIntent(contentUri, contentType, header);
+        Intent chooseIntent = Intent.createChooser(shareIntent, header);
+        startActivityForResult(call, chooseIntent, "handleFileShare");
     }
 
     @PluginMethod
@@ -96,6 +101,11 @@ public class FileSharerPlugin extends Plugin {
             ret.put("result", false);
             ret.put("message", "Missing argument filename");
             call.resolve(ret);
+            return;
+        }
+        String header = "Share your files";
+        if(data.has("header")) {
+            header = data.getString("header");
         }
         JSArray files = call.getArray("files");
         File cachePath = implementation.getDirectory(FILESHARE_DIR);
@@ -115,7 +125,8 @@ public class FileSharerPlugin extends Plugin {
         }
         if(fileUris.size() > 0) {
             final Intent multiShareIntent = implementation.createShareMultipleIntent(fileUris);
-            startActivityForResult(call, multiShareIntent, "handleFileShare");
+            Intent chooser = Intent.createChooser(multiShareIntent, header);
+            startActivityForResult(call, chooser, "handleFileShare");
         }
     }
 
