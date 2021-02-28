@@ -1,9 +1,8 @@
 package com.interapptive.filesharer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.StrictMode;
-import android.util.Base64;
 import android.util.Log;
 
 import com.getcapacitor.JSObject;
@@ -14,8 +13,6 @@ import com.getcapacitor.annotation.ActivityCallback;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import androidx.activity.result.ActivityResult;
 import androidx.core.content.FileProvider;
@@ -71,12 +68,28 @@ public class FileSharerPlugin extends Plugin {
             ret.put("message", "Unable to get file reference: " + ex.getLocalizedMessage());
             call.resolve(ret);
         }
-        final Intent shareIntent = implementation.createShareIntent(contentUri, contentType);
-        startActivityForResult(call, shareIntent, "handleFileShare");
+        final Intent shareIntent = implementation.createShareIntent(contentUri, contentType, filename);
+        try {
+            startActivityForResult(call, shareIntent, "handleFileShare");
+        } catch (Exception exception) {
+            Log.e(getLogTag(), exception.getLocalizedMessage());
+            ret.put("result", false);
+            ret.put("message", exception.getLocalizedMessage());
+            call.resolve(ret);
+        }
     }
 
     @ActivityCallback
     private void handleFileShare(PluginCall call, ActivityResult result) {
-        call.resolve();
+        JSObject ret = new JSObject();
+        final int grc = result.getResultCode();
+        // ACTION_SEND Returns 0 by default
+        if(grc == Activity.RESULT_CANCELED) {
+            ret.put("result", true);
+        } else {
+            ret.put("result", false);
+        }
+        ret.put("message", "Share Sheet Opened with Code: " + String.valueOf(grc));
+        call.resolve(ret);
     }
 }

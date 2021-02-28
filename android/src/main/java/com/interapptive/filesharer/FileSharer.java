@@ -28,8 +28,11 @@ public class FileSharer {
         }
     }
 
-    public Intent createShareIntent(Uri contentUri, String contentType) {
+    public Intent createShareIntent(Uri contentUri, String contentType, String filename) {
         final Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, filename);
+        // (Optional) Here we're setting the title of the content
+        shareIntent.putExtra(Intent.EXTRA_TITLE, "File share");
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
         shareIntent.setTypeAndNormalize(contentType);
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
