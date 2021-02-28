@@ -18,9 +18,9 @@ public class FileSharerPlugin: CAPPlugin {
            call.reject("Base64Data parameter not provided")
             return
         }
-            return
-            call.reject("The base64 data provided is invalid")
         guard let fileData = Data(base64Encoded: base64Data) else {
+            call.reject("The base64 data provided is invalid")
+            return
         }
 
         let tempFilePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
@@ -29,12 +29,12 @@ public class FileSharerPlugin: CAPPlugin {
             try fileData.write(to: tempFilePathUrl)
 
             DispatchQueue.main.async {
-                if(deviceType.range(of: "iPad") != nil) {
                 let deviceType = UIDevice.current.model
+                if(deviceType.range(of: "iPad") != nil) {
                     self.setCenteredPopover(viewCtrl)
                     self.bridge?.viewController?.present(viewCtrl, animated: true, completion: {
+                        call.resolve()
                         })
-                            call.resolve()
                 } else if(deviceType.range(of: "iPhone") != nil) {
                     self.bridge?.viewController?.present(viewCtrl, animated: true, completion: {
                             call.resolve()
@@ -43,8 +43,51 @@ public class FileSharerPlugin: CAPPlugin {
                     call.reject("Unknow device type to present share")
                 }             
             }
-            call.reject("Unable to write file correctly")
         } catch {
+            call.reject("Unable to write file correctly")
         }
     }
+
+    @objc func shareMultiple(_ call: CAPPluginCall) {
+        let files = call.getArray("files", [String:String].self)
+        var header = "Share your files"
+        if(call.getString("header") != nil) {
+            header = call.getString("header")!
+        }
+        var fileUrls: [Any] = []
+        files?.forEach({ (file) in
+            let filename = file["filename"]
+            let base64Data = file["base64Data"]
+            let fileData = Data(base64Encoded: base64Data!)
+            let tempFilePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent(filename!)
+            fileUrls.append(tempFilePathUrl)
+            do {
+            try fileData?.write(to: tempFilePathUrl)
+            } catch {
+                call.resolve()
+            }
+        })
+
+        let viewCtrl = UIActivityViewController(activityItems: fileUrls, applicationActivities: nil)
+        DispatchQueue.main.async {
+            viewCtrl.setValue(header, forKey: "Subject")
+            let deviceType = UIDevice.current.model
+            if(deviceType.range(of: "iPad") != nil) {
+                self.setCenteredPopover(viewCtrl)
+                self.bridge?.viewController?.present(viewCtrl, animated: true, completion: {
+                    call.resolve()
+                    })
+            } else if(deviceType.range(of: "iPhone") != nil) {
+                self.bridge?.viewController?.present(viewCtrl, animated: true, completion: {
+                        call.resolve()
+                    })
+            } else {
+                call.reject("Unknow device type to present share")
+            }
+        }
+        
+        call.resolve();
+
+    }
+    typealias fileType = (contentType: String, filename: String, base64Data: String)
 }
