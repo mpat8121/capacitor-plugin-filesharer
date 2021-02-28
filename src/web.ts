@@ -9,10 +9,11 @@ export class FileSharerWeb extends WebPlugin implements FileSharerPlugin {
   }
 
   async share() {
-    throw this.unavailable('FielSharer API not available in this browser.');
+    throw this.unavailable('FileSharer API not available in this browser.');
   }
 
   async shareMultiple() {
-    throw this.unavailable('FielSharer API not available in this browser.');
+    throw this.unavailable('FileSharer API not available in this browser.');
   }
+
 }
