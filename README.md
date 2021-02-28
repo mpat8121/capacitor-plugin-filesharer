@@ -16,7 +16,6 @@ npx cap sync
 * [`share(...)`](#share)
 * [`shareMultiple(...)`](#sharemultiple)
 * [Interfaces](#interfaces)
-* [Enums](#enums)
 
 </docgen-index>
 
@@ -29,9 +28,7 @@ npx cap sync
 share(opts: FileShareOptions) => any
 ```
 
-| Param      | Type                                                          |
-| ---------- | ------------------------------------------------------------- |
-| **`opts`** | <code><a href="#fileshareoptions">FileShareOptions</a></code> |
+Open share activity card with an attached base64Data
 
 | Param      | Type                                                          |
 | ---------- | ------------------------------------------------------------- |
@@ -78,8 +75,5 @@ shareMultiple(opts: FileShareMultiOptions) => any
 | ------------ | ------------------- |
 | **`header`** | <code>string</code> |
 | **`files`**  | <code>{}</code>     |
-
-
-NOTE: The header property does not apply to all OS versions
 
 </docgen-api>

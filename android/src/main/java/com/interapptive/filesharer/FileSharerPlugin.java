@@ -87,10 +87,10 @@ public class FileSharerPlugin extends Plugin {
             ret.put("message", "Unable to get file reference: " + ex.getLocalizedMessage());
             call.resolve(ret);
         }
-        final Intent shareIntent = implementation.createShareIntent(contentUri, contentType, header);
+        final Intent shareIntent = implementation.createShareIntent(contentUri, contentType, header, filename);
         Intent chooseIntent = Intent.createChooser(shareIntent, header);
         try {
-        startActivityForResult(call, chooseIntent, "handleFileShare");
+            startActivityForResult(call, chooseIntent, "handleFileShare");
         } catch (Exception exception) {
             Log.e(getLogTag(), exception.getLocalizedMessage());
             ret.put("result", false);
