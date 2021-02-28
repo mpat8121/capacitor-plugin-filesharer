@@ -50,7 +50,11 @@ public class FileSharerPlugin: CAPPlugin {
 
     @objc func shareMultiple(_ call: CAPPluginCall) {
         let files = call.getArray("files", [String:String].self)
-        var fileUrls: [URL] = []
+        var header = "Share your files"
+        if(call.getString("header") != nil) {
+            header = call.getString("header")!
+        }
+        var fileUrls: [Any] = []
         files?.forEach({ (file) in
             let filename = file["filename"]
             let base64Data = file["base64Data"]
@@ -63,9 +67,10 @@ public class FileSharerPlugin: CAPPlugin {
                 call.resolve()
             }
         })
-        let viewCtrl = UIActivityViewController(activityItems: [fileUrls], applicationActivities: nil)
-        
+
+        let viewCtrl = UIActivityViewController(activityItems: fileUrls, applicationActivities: nil)
         DispatchQueue.main.async {
+            viewCtrl.setValue(header, forKey: "Subject")
             let deviceType = UIDevice.current.model
             if(deviceType.range(of: "iPad") != nil) {
                 self.setCenteredPopover(viewCtrl)
