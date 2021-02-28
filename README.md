@@ -72,4 +72,7 @@ shareMultiple(opts: FileShareMultiOptions) => any
 | **`header`** | <code>string</code> |
 | **`files`**  | <code>{}</code>     |
 
+
+NOTE: The header property does not apply to all OS versions
+
 </docgen-api>
