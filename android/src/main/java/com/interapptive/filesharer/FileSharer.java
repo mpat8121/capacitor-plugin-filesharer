@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
+import com.getcapacitor.JSObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

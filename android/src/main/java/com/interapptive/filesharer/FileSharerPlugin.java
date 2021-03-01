@@ -41,19 +41,25 @@ public class FileSharerPlugin extends Plugin {
     public void share(PluginCall call) {
         JSObject data = call.getData();
         JSObject ret = new JSObject();
-        if(!data.has("filename" )) {
+        if(!data.has("filename" )
+                || data.getString("filename") == null
+                || data.getString("filename").isEmpty()) {
             ret.put("result", false);
             ret.put("message", "Missing argument filename");
             call.resolve(ret);
             return;
         }
-        if(!data.has("contentType")) {
+        if(!data.has("contentType")
+                || data.getString("contentType") == null
+                || data.getString("contentType").isEmpty()) {
             ret.put("result", false);
             ret.put("message", "Missing argument contentType");
             call.resolve(ret);
             return;
         }
-        if(!data.has("base64Data")) {
+        if(!data.has("base64Data")
+                || data.getString("base64Data") == null
+                || data.getString("base64Data").isEmpty()) {
             ret.put("result", false);
             ret.put("message", "Missing argument base64Data");
             call.resolve(ret);
@@ -99,7 +105,6 @@ public class FileSharerPlugin extends Plugin {
         try {
             contentUri = FileProvider.getUriForFile(getContext(), fileProviderName, cachedFile);
         } catch (IllegalArgumentException ex) {
-            contentUri = null;
             Log.e(getLogTag(), ex.getLocalizedMessage());
             ret.put("result", false);
             ret.put("message", "Unable to get file reference: " + ex.getLocalizedMessage());
@@ -124,30 +129,89 @@ public class FileSharerPlugin extends Plugin {
     public void shareMultiple(PluginCall call) {
         JSObject ret = new JSObject();
         JSObject data = call.getData();
-        if(!data.has("files")) {
+        if(!data.has("files")
+                || call.getArray("files") == null
+                || call.getArray("files").length() == 0) {
             ret.put("result", false);
-            ret.put("message", "Missing argument filename");
+            ret.put("message", "Missing argument files");
             call.resolve(ret);
             return;
         }
         String header = "Share your files";
-        if(data.has("header")) {
+        if(data.has("header") && !data.getString("header").isEmpty()) {
             header = data.getString("header");
         }
         JSArray files = call.getArray("files");
-        File cachePath = implementation.getDirectory(FILESHARE_DIR);
+        File cachePath;
+        try {
+            cachePath = implementation.getDirectory(FILESHARE_DIR);
+        } catch(Exception ex) {
+            Log.e(getLogTag(), ex.getLocalizedMessage());
+            ret.put("result", false);
+            ret.put("message", "Unable to get write directory");
+            call.resolve(ret);
+            return;
+        }
         ArrayList<Uri> fileUris = new ArrayList<Uri>();
         for(int i = 0; i < files.length(); i++) {
             try {
                 JSONObject file = files.getJSONObject(i);
+                if(!file.has("filename") || !file.has("base64Data")) {
+                    ret.put("result", false);
+                    ret.put("message", "Missing arguments in files");
+                    call.resolve(ret);
+                    return;
+                }
                 String filename = file.getString("filename");
                 String base64Data = file.getString("base64Data");
+                if(filename == "null" || filename.isEmpty()) {
+                    ret.put("result", false);
+                    ret.put("message", "Missing argument filename");
+                    call.resolve(ret);
+                    return;
+                }
+                if(base64Data == "null" || base64Data.isEmpty()) {
+                    ret.put("result", false);
+                    ret.put("message", "Missing argument filename");
+                    call.resolve(ret);
+                    return;
+                }
                 File cachedFile = new File(cachePath, filename);
-                boolean fileWrite = implementation.writeFile(cachedFile, base64Data);
-                Uri fileUri = FileProvider.getUriForFile(getContext(), fileProviderName, cachedFile);
+                try {
+                    boolean fileWrite = implementation.writeFile(cachedFile, base64Data);
+                    if(!fileWrite) {
+                        ret.put("result", false);
+                        ret.put("message", "Unable to write file");
+                        Log.d(getLogTag(), "Unable to write file");
+                        call.resolve(ret);
+                        return;
+                    }
+                } catch (Exception ex) {
+                    Log.e(getLogTag(), ex.getLocalizedMessage());
+                    ret.put("result", false);
+                    ret.put("message", "Unable to write file");
+                    Log.d(getLogTag(), "Unable to write file");
+                    call.resolve(ret);
+                    return;
+                }
+                Uri fileUri;
+                try {
+                    fileUri = FileProvider.getUriForFile(getContext(), fileProviderName, cachedFile);
+                } catch (IllegalArgumentException ex) {
+                    Log.e(getLogTag(), ex.getLocalizedMessage());
+                    ret.put("result", false);
+                    ret.put("message", "Unable to get file reference: " + ex.getLocalizedMessage());
+                    call.resolve(ret);
+                    return;
+                }
                 fileUris.add(fileUri);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+                Log.e(getLogTag(), ex.getLocalizedMessage());
+                ret.put("result", false);
+                ret.put("message", "Unable to get process file: " + ex.getLocalizedMessage());
+                call.resolve(ret);
+                return;
             }
         }
         if(fileUris.size() > 0) {
