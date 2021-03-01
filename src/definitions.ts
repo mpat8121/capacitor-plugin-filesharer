@@ -1,26 +1,45 @@
-export interface FileSharerPlugin {
-  /**
-   * Open share activity card with an attached base64Data
-   * @param {FileShareOptions} opts 
-   * @since 0.0.1
-   */
-  share(opts: FileShareOptions): Promise<void>;
-
-  shareMultiple(opts: FileShareMultiOptions): Promise<void>;
-}
-
+/**
+ * @hidden
+ */
 export interface FileShareOptions {
+  /** 
+   * Filename 
+   * */
   filename: string;
+  /** 
+   * base64Data string
+   *  */
   base64Data: string;
+  /** 
+   * Content type using FileShareContentType of string for advanced types
+   *  */
   contentType: string;
-  header?: string;
 }
-
-export interface FileShareMultiOptions {
+/**
+ * @hidden
+ */
+export interface FileShareSingleOptions extends FileShareOptions {
+  /** 
+   * Title of the share window popup
+   *  */
   header: string;
+}
+/**
+ * @hidden
+ */
+export interface FileShareMultiOptions {
+  /** 
+   * Title of the share window popup
+   *  */
+  header: string;
+  /** 
+   * Array of files for uploading
+   */
   files: FileShareOptions[]
 }
-
+/**
+ * @hidden
+ */
 export enum FileShareContentType {
   TEXT = 'text/*',
   TEXT_PLAIN = 'text/plain',
@@ -32,4 +51,37 @@ export enum FileShareContentType {
   IMAGE_PNG = 'image/png',
   IMAGE_GIF = 'image/gif',
   PDF = 'application/pdf'
+}
+/**
+ * @hidden
+ */
+export interface FileShareResult {
+  result: boolean;
+  message: string;
+}
+
+/**
+ * @name FileSharePlugin
+ * @description
+ * A Capacitor 3 plugin that allows sharing of base64 data string via native
+ * share action cards on ios and android devices
+ * 
+ * @interfaces
+ * FileShareMultiOptions
+ * FileShareContentType
+ * FileShareResult
+ */
+export interface FileSharerPlugin {
+  /**
+   * Open share activity card with an attached base64Data
+   * @param {FileShareSingleOptions} opts 
+   * @since 0.0.1
+   */
+  share(opts: FileShareSingleOptions): Promise<FileShareResult>;
+  /**
+   * Open share activity with multiple base64Data strings
+   * @param {FileShareMultiOptions} opts 
+   * @since 0.0.1
+   */
+  shareMultiple(opts: FileShareMultiOptions): Promise<FileShareResult>;
 }

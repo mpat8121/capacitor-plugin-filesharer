@@ -1,6 +1,6 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { FileSharerPlugin } from './definitions';
+import type { FileShareResult, FileSharerPlugin } from './definitions';
 
 export class FileSharerWeb extends WebPlugin implements FileSharerPlugin {
   async echo(options: { value: string }): Promise<{ value: string }> {
@@ -8,11 +8,11 @@ export class FileSharerWeb extends WebPlugin implements FileSharerPlugin {
     return options;
   }
 
-  async share() {
+  async share(): Promise<FileShareResult> {
     throw this.unavailable('FileSharer API not available in this browser.');
   }
 
-  async shareMultiple() {
+  async shareMultiple(): Promise<FileShareResult> {
     throw this.unavailable('FileSharer API not available in this browser.');
   }
 
