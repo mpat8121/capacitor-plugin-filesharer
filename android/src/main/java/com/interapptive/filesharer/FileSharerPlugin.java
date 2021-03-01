@@ -18,8 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import androidx.activity.result.ActivityResult;
@@ -43,7 +41,7 @@ public class FileSharerPlugin extends Plugin {
     public void share(PluginCall call) {
         JSObject data = call.getData();
         JSObject ret = new JSObject();
-        if(!data.has("filename")) {
+        if(!data.has("filename" )) {
             ret.put("result", false);
             ret.put("message", "Missing argument filename");
             call.resolve(ret);
@@ -68,15 +66,35 @@ public class FileSharerPlugin extends Plugin {
         String header = data.getString("header");
 
         File cachePath = implementation.getDirectory(FILESHARE_DIR);
-        File cachedFile = new File(cachePath, filename);
+        File cachedFile;
+        try {
+            cachedFile = new File(cachePath, filename);
+        } catch (Exception exception) {
+            Log.e(getLogTag(), "Error caching file");
+            ret.put("result", false);
+            ret.put("message", "Error caching file");
+            call.resolve(ret);
+            return;
+        }
 
-        boolean fileWrite = implementation.writeFile(cachedFile, base64Data);
-        if(!fileWrite) {
+        try {
+            boolean fileWrite = implementation.writeFile(cachedFile, base64Data);
+            if(!fileWrite) {
+                ret.put("result", false);
+                ret.put("message", "Unable to write file");
+                Log.d(getLogTag(), "Unable to write file");
+                call.resolve(ret);
+                return;
+            }
+        } catch (Exception exception) {
+            Log.e(getLogTag(), exception.getLocalizedMessage());
             ret.put("result", false);
             ret.put("message", "Unable to write file");
             Log.d(getLogTag(), "Unable to write file");
             call.resolve(ret);
+            return;
         }
+
         Uri contentUri;
         try {
             contentUri = FileProvider.getUriForFile(getContext(), fileProviderName, cachedFile);
@@ -86,16 +104,19 @@ public class FileSharerPlugin extends Plugin {
             ret.put("result", false);
             ret.put("message", "Unable to get file reference: " + ex.getLocalizedMessage());
             call.resolve(ret);
+            return;
         }
-        final Intent shareIntent = implementation.createShareIntent(contentUri, contentType, header, filename);
-        Intent chooseIntent = Intent.createChooser(shareIntent, header);
+
         try {
+            final Intent shareIntent = implementation.createShareIntent(contentUri, contentType, header, filename);
+            Intent chooseIntent = Intent.createChooser(shareIntent, header);
             startActivityForResult(call, chooseIntent, "handleFileShare");
         } catch (Exception exception) {
             Log.e(getLogTag(), exception.getLocalizedMessage());
             ret.put("result", false);
             ret.put("message", exception.getLocalizedMessage());
             call.resolve(ret);
+            return;
         }
     }
 
@@ -144,6 +165,7 @@ public class FileSharerPlugin extends Plugin {
         if(grc == Activity.RESULT_CANCELED) {
             ret.put("result", true);
         } else {
+            // else statement redundant
             ret.put("result", false);
         }
         ret.put("message", "Share Sheet Opened with Code: " + String.valueOf(grc));
