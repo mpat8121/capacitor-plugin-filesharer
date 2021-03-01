@@ -11,15 +11,24 @@ public class FileSharerPlugin: CAPPlugin {
 
     @objc func share(_ call: CAPPluginCall) {
         guard let filename = call.getString("filename") else {
-           call.reject("Filename parameter not provided")
+            call.resolve([
+             "result": false,
+             "message": "Filename parameter not provided"
+            ])
             return
         }
         guard let base64Data = call.getString("base64Data") else {
-           call.reject("Base64Data parameter not provided")
-            return
+           call.resolve([
+            "result": false,
+            "message": "Base64Data parameter not provided"
+           ])
+           return
         }
         guard let fileData = Data(base64Encoded: base64Data) else {
-            call.reject("The base64 data provided is invalid")
+            call.resolve([
+              "result": false,
+              "message": "The base64 data provided is invalid"
+            ])
             return
         }
 
@@ -33,23 +42,36 @@ public class FileSharerPlugin: CAPPlugin {
                 if(deviceType.range(of: "iPad") != nil) {
                     self.setCenteredPopover(viewCtrl)
                     self.bridge?.viewController?.present(viewCtrl, animated: true, completion: {
-                        call.resolve()
+                        call.resolve(["result": true, "message": "Share Sheet opened successfully"])
                         })
                 } else if(deviceType.range(of: "iPhone") != nil) {
                     self.bridge?.viewController?.present(viewCtrl, animated: true, completion: {
-                            call.resolve()
+                        call.resolve(["result": true, "message": "Share Sheet opened successfully"])
                         })
                 } else {
-                    call.reject("Unknow device type to present share")
+                    call.resolve([
+                     "result": false,
+                     "message": "Unknown device type to present share"
+                    ])
                 }             
             }
         } catch {
-            call.reject("Unable to write file correctly")
+            call.resolve([
+              "result": false,
+              "message": "Unable to write file correctly"
+            ])
         }
     }
 
     @objc func shareMultiple(_ call: CAPPluginCall) {
         let files = call.getArray("files", [String:String].self)
+        if(files?.isEmpty == nil) {
+            call.resolve([
+             "result": false,
+             "message": "Incorrect files parameter provided"
+            ])
+            return
+        }
         var header = "Share your files"
         if(call.getString("header") != nil) {
             header = call.getString("header")!
@@ -57,14 +79,30 @@ public class FileSharerPlugin: CAPPlugin {
         var fileUrls: [Any] = []
         files?.forEach({ (file) in
             let filename = file["filename"]
+            if(filename?.isEmpty == nil || filename?.count == 0) {
+                call.resolve([
+                 "result": false,
+                 "message": "Filename parameter not provided"
+                ])
+                return
+            }
             let base64Data = file["base64Data"]
-            let fileData = Data(base64Encoded: base64Data!)
+            guard let fileData = Data(base64Encoded: base64Data!) else {
+                call.resolve([
+                  "result": false,
+                  "message": "The base64 data provided is invalid"
+                ])
+                return
+            }
             let tempFilePathUrl = FileManager.default.temporaryDirectory.appendingPathComponent(filename!)
             fileUrls.append(tempFilePathUrl)
             do {
-            try fileData?.write(to: tempFilePathUrl)
+                try fileData.write(to: tempFilePathUrl)
             } catch {
-                call.resolve()
+                call.resolve([
+                    "result": false,
+                    "message": "Unable to write file"
+                  ])
             }
         })
 
@@ -75,19 +113,25 @@ public class FileSharerPlugin: CAPPlugin {
             if(deviceType.range(of: "iPad") != nil) {
                 self.setCenteredPopover(viewCtrl)
                 self.bridge?.viewController?.present(viewCtrl, animated: true, completion: {
-                    call.resolve()
+                    call.resolve([
+                        "result": true,
+                        "message": "Share Sheet opened successfully"
+                      ])
                     })
             } else if(deviceType.range(of: "iPhone") != nil) {
                 self.bridge?.viewController?.present(viewCtrl, animated: true, completion: {
-                        call.resolve()
+                        call.resolve([
+                            "result": true,
+                            "message": "Share Sheet opened successfully"
+                          ])
                     })
             } else {
-                call.reject("Unknow device type to present share")
+                call.resolve([
+                    "result": false,
+                    "message": "Unknown device type to present share"
+                   ])
             }
         }
-        
-        call.resolve();
-
     }
     typealias fileType = (contentType: String, filename: String, base64Data: String)
 }
