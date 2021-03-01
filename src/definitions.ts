@@ -52,6 +52,13 @@ export enum FileShareContentType {
   IMAGE_GIF = 'image/gif',
   PDF = 'application/pdf'
 }
+/**
+ * @hidden
+ */
+export interface FileShareResult {
+  result: boolean;
+  message: string;
+}
 
 /**
  * @name FileSharePlugin
@@ -62,6 +69,7 @@ export enum FileShareContentType {
  * @interfaces
  * FileShareMultiOptions
  * FileShareContentType
+ * FileShareResult
  */
 export interface FileSharerPlugin {
   /**
@@ -69,11 +77,11 @@ export interface FileSharerPlugin {
    * @param {FileShareSingleOptions} opts 
    * @since 0.0.1
    */
-  share(opts: FileShareSingleOptions): Promise<any>;
+  share(opts: FileShareSingleOptions): Promise<FileShareResult>;
   /**
    * Open share activity with multiple base64Data strings
    * @param {FileShareMultiOptions} opts 
    * @since 0.0.1
    */
-  shareMultiple(opts: FileShareMultiOptions): Promise<any>;
+  shareMultiple(opts: FileShareMultiOptions): Promise<FileShareResult>;
 }

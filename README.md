@@ -70,6 +70,14 @@ Open share activity with multiple base64Data strings
 | **`header`** | <code>string</code> | Title of the share window popup |
 
 
+#### FileShareResult
+
+| Prop          | Type                 |
+| ------------- | -------------------- |
+| **`result`**  | <code>boolean</code> |
+| **`message`** | <code>string</code>  |
+
+
 #### FileShareMultiOptions
 
 | Prop         | Type                | Description                     |
