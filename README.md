@@ -1,5 +1,5 @@
 <h3 align="center">FileSharer</h3>
-<p align="center">Using Capacitor 3.0</p>
+<p align="center">Uses Capacitor 3.0</p>
 
 
 <p align="center">
@@ -14,7 +14,7 @@ Capacitor plugin for Android and iOS that enables sharing of files
   <a href="https://www.npmjs.com/package/capacitor-plugin-filesharer"><img src="https://img.shields.io/npm/dw/capacitor-plugin-filesharer?style=flat-square" /></a>
   <a href="https://www.npmjs.com/package/capacitor-plugin-filesharer"><img src="https://img.shields.io/npm/v/capacitor-plugin-filesharer?style=flat-square" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-<a href="#contributors-"><img src="https://img.shields.io/badge/all%20contributors-2-orange?style=flat-square" /></a>
+<a href="#contributors"><img src="https://img.shields.io/badge/all%20contributors-2-orange?style=flat-square" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 </p>
 
@@ -131,5 +131,12 @@ Open share activity with multiple base64Data strings
 | shareMultiple           | ✅      | ✅ | ❌ |
 
 ## Contributors
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/mpat8121"><img src="https://avatars3.githubusercontent.com/u/6610593?v=4" width="100px;" alt=""/><br /><sub><b>Mick Patterson</b></sub></a><br /><a href="https://github.com/mpat8121/capacitor-plugin-filesharer/commits?author=mpat8121" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/g-starr"><img src="https://avatars.githubusercontent.com/u/79553652?s=460&v=4" width="100px;" alt=""/><br /><sub><b>Graham Starr</b></sub></a><br /><a href="https://github.com/mpat8121/capacitor-plugin-filesharer/commits?author=Graei" title="Code">💻</a></td>    
+  </tr>
+</table>
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
