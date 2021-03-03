@@ -106,10 +106,10 @@ Open share activity with multiple base64Data strings
 
 #### FileShareMultiOptions
 
-| Prop         | Type                | Description                     |
-| ------------ | ------------------- | ------------------------------- |
-| **`header`** | <code>string</code> | Title of the share window popup |
-| **`files`**  | <code>{}</code>     | Array of files for uploading    |
+| Prop         | Type                                | Description                     |
+| ------------ | ----------------------------------- | ------------------------------- |
+| **`header`** | <code>string</code>                 | Title of the share window popup |
+| **`files`**  | <code>FileShareOptions[]</code>     | Array of files for uploading    |
 
 
 #### FileShareOptions
